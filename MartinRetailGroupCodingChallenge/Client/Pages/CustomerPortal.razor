@@ -1,0 +1,50 @@
+﻿@page "/customerportal"
+@inject ICustomerService CustomerService
+@implements IDisposable
+
+<h3>Customer Portal</h3>
+
+@if (CustomerService.Customers.Count == 0)
+{
+    <span>Loading Customers...</span>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email Address</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in CustomerService.Customers)
+            {
+                <tr>
+                    <td>@customer.Name</td>
+                    <td>@customer.EmailAddress</td>
+                    <td>@customer.Message</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+
+<CreateCustomer></CreateCustomer>
+
+@code {
+    List<MartinRetailGroupCodingChallenge.Shared.Customer> customers = new List<MartinRetailGroupCodingChallenge.Shared.Customer>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        customers = await CustomerService.GetCustomers();
+        CustomerService.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        CustomerService.OnChange -= StateHasChanged;
+    }
+}

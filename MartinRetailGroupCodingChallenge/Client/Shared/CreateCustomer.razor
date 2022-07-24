@@ -1,0 +1,23 @@
+﻿@inject ICustomerService CustomerService
+@inject IJSRuntime JSRuntime
+
+<h3>Create Customer</h3>
+
+<EditForm Model="Customer" OnSubmit="HandleSubmit">
+    <InputText @bind-Value="Customer.Name" class="form-control" placeholder="Name"></InputText>
+    <InputText @bind-Value="Customer.EmailAddress" class="form-control" placeholder="Email Address"></InputText>
+    <InputText @bind-Value="Customer.Message" class="form-control" placeholder="Message"></InputText>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+@code {
+    public MartinRetailGroupCodingChallenge.Shared.Customer Customer { get; set; } = new MartinRetailGroupCodingChallenge.Shared.Customer();
+
+    async void HandleSubmit()
+    {
+        Console.WriteLine("Submit was called");
+        await JSRuntime.InvokeVoidAsync("console.log", Customer);
+
+        await CustomerService.CreateCustomer(Customer);
+    }
+}
